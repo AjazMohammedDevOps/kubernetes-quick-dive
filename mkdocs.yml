@@ -1,4 +1,4 @@
-site_name: Ultimate Kubernetes Bootcamp
+site_name: Kubernetes Quick Dive
 pages:
   - Home: "index.md"
   - Using minikube to setup single node environment: "minikube.md" 
