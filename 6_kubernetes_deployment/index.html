@@ -67,7 +67,7 @@
     <a class="current" href="./">Creating Deployments</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#creating-a-deployment">Creating a Deployment</a></li>
+    <li class="toctree-l2"><a href="#deploying-applications">Deploying Applications</a></li>
     
 
     <li class="toctree-l2"><a href="#scaling-a-deployment">Scaling a deployment</a></li>
@@ -118,69 +118,40 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="creating-a-deployment">Creating a Deployment</h2>
+                <h2 id="deploying-applications">Deploying Applications</h2>
 <p>A Deployment is a higher level abstraction which sits on top of replica sets and allows you to manage the way applications are deployed, rolled back at a controlled rate.</p>
 <p>Deployment has mainly two responsibilities,</p>
 <ul>
 <li>Provide Fault Tolerance: Maintain the number of replicas for a type of service/app. Schedule/delete pods to meet the desired count.</li>
 <li>Update Strategy: Define a release strategy and update the pods accordingly.</li>
 </ul>
-<p>File: /k8s-code/projects/instavote/dev/vote-deploy.yaml</p>
+<p>Lets write the deployment specs  with replication set to  8.</p>
+<p>File: /code/vote-deploy.yaml</p>
 <pre><code>apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: vote
-  namespace: instavote
 spec:
-  replicas: 8
-  revisionHistoryLimit: 4
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 2
-  minReadySeconds: 20
-  paused: false
+  replicas: 3
   template:
     metadata:
       labels:
         app: vote
         role: ui
-        tier: front
     spec:
       containers:
       - image: schoolofdevops/vote
-        imagePullPolicy: Always
         name: vote
         ports:
         - containerPort: 80
           protocol: TCP
 </code></pre>
 
-<p>Deployment spec (deployment.spec) contains the following,</p>
-<ul>
-<li>replicaset specs<ul>
-<li>selectors  </li>
-<li>replicas  </li>
-</ul>
-</li>
-<li>deployment spec<ul>
-<li>strategy</li>
-<li>rollingUpdate</li>
-<li>minReadySeconds</li>
-</ul>
-</li>
-<li>pod template<ul>
-<li>metadata, labels</li>
-<li>container specs</li>
-</ul>
-</li>
-</ul>
 <p>Lets  create the Deployment</p>
-<pre><code>kubectl apply -f vote-deploy.yaml --record
+<pre><code>kubectl apply -f vote-deploy.yaml
 </code></pre>
 
-<p>Now that the deployment is created. To validate,</p>
+<p>Lets validate the deployments,</p>
 <pre><code>kubectl get deployment
 kubectl get rs
 kubectl get deploy,pods,rs

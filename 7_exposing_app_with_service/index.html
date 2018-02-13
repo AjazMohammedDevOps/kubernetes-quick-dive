@@ -78,8 +78,6 @@
         
             <li><a class="toctree-l3" href="#publishing-a-service-with-nodeport">Publishing a service with NodePort</a></li>
         
-            <li><a class="toctree-l3" href="#exposing-the-app-with-externalip">Exposing the app with ExternalIP</a></li>
-        
         </ul>
     
 
@@ -152,8 +150,7 @@ metadata:
   labels:
     role: svc
     tier: front
-  name: vote-svc
-  namespace: instavote
+  name: vote
 spec:
   selector:
     app: vote
@@ -197,25 +194,6 @@ Events:                   &lt;none&gt;
 <p>Here the node port is 31429.</p>
 <p>Sample output will be:</p>
 <p><img alt="Vote" src="../images/vote.png" /></p>
-<h2 id="exposing-the-app-with-externalip">Exposing the app with ExternalIP</h2>
-<pre><code>spec:
-  selector:
-    app: vote
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 80
-  type: NodePort
-  externalIPs:
-    - 192.168.12.11
-    - 192.168.12.12
-</code></pre>
-
-<p>apply</p>
-<pre><code>kubectl apply -f vote-svc.yaml
-kubectl  get svc
-kubectl describe svc vote
-</code></pre>
               
             </div>
           </div>

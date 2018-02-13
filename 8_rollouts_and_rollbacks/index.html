@@ -119,6 +119,53 @@
             <div class="section">
               
                 <h2 id="rolling-updates-with-deployments">Rolling updates with deployments</h2>
+<p>Lets create the update/deployment strategy as follows</p>
+<pre><code>revisionHistoryLimit: 4
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 2
+minReadySeconds: 20
+
+</code></pre>
+
+<p>Here,</p>
+<p><strong>strategy.type</strong> : rolling updates which deploys pods in batches. Batch size is determined by following factors
+  * maxUnavailable
+  * maxSurge</p>
+<p><strong>minReadySeconds</strong> : Time taken by the application to come up and be operational.</p>
+<p>The above specs need to be added to the deployment configs as follows,</p>
+<p>File: vote-deploy.yaml</p>
+<pre><code>apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: vote
+spec:
+  replicas: 8
+  revisionHistoryLimit: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+  minReadySeconds: 20
+  template:
+    metadata:
+      labels:
+        app: vote
+        role: ui
+    spec:
+      containers:
+      - image: schoolofdevops/vote
+        name: vote
+        ports:
+        - containerPort: 80
+          protocol: TCP
+
+
+</code></pre>
+
 <p>Update the version of the image in vote_deploy.yaml</p>
 <p>File: vote-deploy.yaml</p>
 <pre><code>...
