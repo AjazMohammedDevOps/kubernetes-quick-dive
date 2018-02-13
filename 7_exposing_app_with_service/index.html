@@ -78,6 +78,8 @@
         
             <li><a class="toctree-l3" href="#publishing-a-service-with-nodeport">Publishing a service with NodePort</a></li>
         
+            <li><a class="toctree-l3" href="#creating-a-service-for-redis">Creating a service for redis</a></li>
+        
         </ul>
     
 
@@ -147,9 +149,6 @@ voting-appp-qpxbm   1/1       Running   0          15m
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    role: svc
-    tier: front
   name: vote
 spec:
   selector:
@@ -194,6 +193,24 @@ Events:                   &lt;none&gt;
 <p>Here the node port is 31429.</p>
 <p>Sample output will be:</p>
 <p><img alt="Vote" src="../images/vote.png" /></p>
+<h2 id="creating-a-service-for-redis">Creating a service for redis</h2>
+<p>file: redis-svc.yml</p>
+<pre><code>---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    role: redis
+    tier: back
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    protocol: TCP
+    targetPort: 6379
+</code></pre>
               
             </div>
           </div>

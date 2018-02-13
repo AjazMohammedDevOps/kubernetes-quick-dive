@@ -70,7 +70,13 @@
     <li class="toctree-l2"><a href="#deploying-applications">Deploying Applications</a></li>
     
 
+    <li class="toctree-l2"><a href="#operating-pods">Operating Pods</a></li>
+    
+
     <li class="toctree-l2"><a href="#scaling-a-deployment">Scaling a deployment</a></li>
+    
+
+    <li class="toctree-l2"><a href="#deploying-redis">Deploying Redis</a></li>
     
 
     </ul>
@@ -165,6 +171,20 @@ NAME       DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 vote   3         3         3            1           3m
 </code></pre>
 
+<h2 id="operating-pods">Operating Pods</h2>
+<pre><code>kubectl get pods
+kubectl get pods -w
+
+</code></pre>
+
+<p>Lets suppose vote-56898568d4-jv5jj is the name of the pod from the output received from above command.
+Lets check  logs and learn how to connect to this pod,</p>
+<pre><code>kubectl logs vote-56898568d4-jv5jj  
+kubectl exec -it vote-56898568d4-jv5jj sh
+
+</code></pre>
+
+<p>where vote-56898568d4-jv5jj is the name of the pod. Replace it with the actual pod identifier</p>
 <h2 id="scaling-a-deployment">Scaling a deployment</h2>
 <p>To scale a deployment in Kubernetes:</p>
 <pre><code>kubectl scale deployment/vote --replicas=5
@@ -173,6 +193,30 @@ vote   3         3         3            1           3m
 <p>Sample output:</p>
 <pre><code>kubectl scale deployment/vote --replicas=5
 deployment &quot;vote&quot; scaled
+</code></pre>
+
+<h2 id="deploying-redis">Deploying Redis</h2>
+<p>file: redis-deploy</p>
+<pre><code>apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: redis
+        tier: back
+    spec:
+      containers:
+      - image: schoolofdevops/redis:latest
+        imagePullPolicy: Always
+        name: redis
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+      restartPolicy: Always
 </code></pre>
               
             </div>
